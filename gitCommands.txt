@@ -112,7 +112,7 @@ git commit -m "Removed this file from the staging index to stop tracking"
 //how to add empty directory into repository
 //It can be done by using touch command
 //Actually touch command is used for modifying the access date and time stamp of file
-//Now when we use touch with a fileName, there is no actually but a file with 0 byte is created, even I dont know how, because symlink shows as 0
+//Now when we use touch with a fileName, there is actually a file with 0 byte created, but in real even I dont know how, because symlink shows as 0
 
 
 touch .gitkeep
