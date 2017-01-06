@@ -1,0 +1,303 @@
+System
+git config --system
+User
+git config --global
+Project
+git config
+
+//Usage
+git config --global user.name "adarsh"
+git config --global user.email "c4adarsh@gmail.com"
+git config --list
+
+//To check each element
+git config user.email
+
+
+git init
+git add .
+git add "fileName"
+git commit -m "Initial commit"
+git log
+git log -n 1
+git log --since=2012-06-15
+git log --until=2012-06-14
+git log --author = "adarsh"
+git log --grep="Init"
+
+//adding files chapter
+git status //Gives the difference in working directory, staging and repository
+
+//compares between working dir to staging and repository.
+git diff
+git diff filename.txt
+
+//compare between staged dir and repository.
+git diff --staged 
+git diff --staged filename.txt
+
+//for deleting a file from repository
+git rm fileName.txt
+git commit -m "removed file"
+
+//moving and renaming are same
+git mv filename1 filename2
+git mv filename1 dir/filename2
+git commit -m "renamed or moved file(both rename and move are same)" 
+
+//reverting the changes in git
+
+//reverting the working directory changes, get the things from repository to replace it
+//get the file from the repository of the current branch(-- is used for staying in current branch)
+git checkout -- filename or foldername
+
+
+//we want to unstage the things, the changes should be still there in the working directory
+git reset HEAD filename
+
+//we can only ammend the last commit, for ammending we can do the following
+//it can be for overwriting the last commit or just to change the message(HEAD will be pointing to the last commit, 
+that is the only thing which can be changed)
+git commit --amend -m "amended the file"
+
+//retreiving the old versions
+git checkout SHAcommitid --filename //This will get the file into staged area, we can commit after this to get it as the latest version
+
+
+//Reverting a commit --only last commit can be reverted - others i don't know
+git revert SHAcommitid
+
+
+//git reset, resets the Head to the specific position
+1. --soft //only repository is reset
+2. --mixed //its the default : both repository and staged files are reset
+3. --hard //repository, stage and working directory are reset
+
+
+//to check where the head is currently
+ cat .git/refs/heads/master
+ 
+git reset --soft SHAcommitid //this will point the head of the repository to SHAcommitid
+
+git reset --mixed SHAcommitid //this will point the head of the repository to SHAcommitid and also make stage dir in sync with it
+
+git reset --hard SHAcommitid //resets all the 3 repository, stage and working directory
+
+//git clean, removes untracked files in working directory
+
+git clean -n //lists files
+git clean -f //clears files
+
+//we can ignore some files which we don't want to commit, such as apk files
+we first create a file named as .gitignore
+then we add all the files which we have to ignore into this file
+
+this one we are creating at project level, these are for project files.
+
+for operating system specific files, its better that we add such files in user's gitignore file.
+For this we have tell git which file to see for ignoring files.
+
+git config --global core.excludesfile /Users/adarsh/.gitignore_global
+
+we have to create .gitignore_global in "users/adarsh/.gitignore_global"
+
+
+//Git keep track for the track files, "once a file is commited, then after that if we add it to .gitignore". It will get tracked.
+//To stop tracking this we have to remove this file from the staging index
+git rm --cached fileName
+git commit -m "Removed this file from the staging index to stop tracking" 
+//The above means that the file has been deleted from staging level, hence any tracking of this is not possible
+
+
+//how to add empty directory into repository
+//It can be done by using touch command
+//Actually touch command is used for modifying the access date and time stamp of file
+//Now when we use touch with a fileName, there is no actually but a file with 0 byte is created, even I dont know how, because symlink shows as 0
+
+
+touch .gitkeep
+git add .
+git commit -m "Adding an empty directory"
+
+//Referencing to commits
+//Referencing Parent commit
+HEAD^, SHAKEY^, MASTER^
+HEAD~1, HEAD~
+//Referencing GrandParent commit
+HEAD^^, SHAKEY^^, MASTER^^, HEAD~2
+//Referencing to Great Grand Parent Commit
+HEAD^^^, SHAKEY^^^, MASTER^^^, HEAD~3
+
+//How we can find all the files in a particular commit shot
+//the commmit just made
+git ls-tree master
+git ls-tree SHAKEY
+git ls-tree HEAD
+
+//2 commits back i.e this gives the snapshot of grandparent commit for the particualr file assets/images/
+git ls-tree master^^ assets/images/
+
+//git logs
+git log
+git log --oneline //gives each commit log in one line
+git log --oneline -3 //gives only last three commit log, oneline for each
+git log --since="2017-01-04 00:00" //its always better to specify time 00:00 to 23.59
+git log shakey1..shakey2 //from a snapsot to another snap shot
+git log shakey1.. filename.html //from a certain snapshot till now, what are the changes happen to filename.html, it returns all the snapshots 
+                                //in which filename.html was changed.
+git log -p shakey1.. filename.html //from a certain snapshot till now, `what are the changes happen to filename.html, it returns all the snapshots 
+                                   //in which filename.html was changed and because of -p it will also show the changes that happend.
+
+//gives stats and summary...it gives summary of each commit and the number of lines changed
+git log --stat --summary
+
+//this gives log in one line for each commit								   
+git log --format="oneline"	
+git log --format="full"
+git log --format="email"
+git log --format = "graph"		
+
+git log --oneline --graph --all --decorate
+
+//Git show SHAKEY
+This option is behaves differently for commits, blobs and trees
+for commits it gives the DIFF of each file the previous version.
+for blobs it opens the file.
+for trees it shows the children inside the tree.
+
+//Diff between 2 commits
+git diff SHAKEY1..SHAKEY2 
+//DIFF BETWEEN CURRENT DIRECTORY AND ANY OF THE COMMIT
+git diff SHAKEY
+//git diff between a file in working directory and some old commit
+git diff SHAKEY filename
+//Diff between a files in 2 different commits
+git diff SHAKEY1..SHAKEY2 filename
+//other useful option
+git diff --stat --summary SHAKEY1..SHAKEY2
+//ignore space changed
+git diff --ignore-space-changed SHAKEY1..SHAKEY2 ["--ignore-space-changed" can be replaced with "b"]
+git diff --ignore-all-space SHAKEY1..SHAKEY2 ["--ignore-space-changed" can be replaced with "w"]
+
+
+BRANCHES:
+//command for seeing all the branches for the current project is below
+git branch 
+//there will be start mark on the branch where the head is currently pointing to.
+//We can also check where the current head is by doing a cat.
+cat .git/HEAD
+//We can see all the branches if we a do a ls to .git/refs/heads
+ls .git/refs/heads
+//Creating a new branch in git
+git branch new_branch_name
+//for checking out a branch we use
+git checkout branch_name
+
+//for creating and checking out together we can use.
+git checkout -b "new_branch_name"
+
+//for seeing the complete tree use
+git log --graph --oneline --decorate --all
+				   
+//comparing branches(it basically compares the head of both the branches)
+git diff --color-words branch1..branch2 
+
+//There is a feature as git branch --merged
+//This will tell if other branches can be deleted or not, if deletion of other branch doesn't affect this branch then we can delete other branch.
+
+git branch --merged
+
+//Renaming a branch
+git branch -m existing_name required_name
+
+//delete branch(The below command deletes the branch only if it is in sync with main branch)
+git branch -d branch_name
+//deleting a branch forcefully
+git branch -D branch_name 		
+
+
+//how to merge sub branch to master branch
+//checkout the master branch
+//execute the below command
+
+git checkout master
+git merge sub_branch
+
+//when merge should be done with commit, no fast forward merge is accepted
+git merge --no-ff branch_to_be_merged
+//when merge should be done only if fast forward is possible
+git merge --ff-only branch_to_be_merged
+					   
+//resolving merge conflicts
+open and change the contents manually, search for >>>>>					   
+
+//open the merge tool when there is a merge conflict
+git  -mergetool --tool= p4merge
+
+//configure the merge tool before using it
+git config --global merge.tool p4merge
+
+//when switching branches if we have uncommitted file, we can stash them
+git stash save "comments" //this doesn't include untracked files, for untracked files we have to include untracked files while saving
+
+//how to list all the git stash items
+git stash list
+//The above command returns all the stashes with stash id and description
+//how to see what is changed in the stash
+git stash show stashid
+or
+git stash show -p stashid	
+
+//how to get the stashed itemsinto the current branch
+git stash pop (pop's the first item from the stack)
+git stash pop stashid (pop's the item with the given stash id)	
+or alternatively :
+git stash apply(peep functionality, just gets the first item but doesn't remove it like pop does)
+git stash apply stashid
+
+//How to delete the stashed items
+git stash drop stashid
+git stash clear //removes all the stashed items. Very destructive command
+
+//Remote repositoriess
+echo "# Artificial-Intelligence" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/c4adarsh/Artificial-Intelligence.git
+git push -u origin master
+
+//how to know about the remote's
+git remote
+git remote -v [this is for more information]
+
+//how to add a remote
+git remote add <alias name> <url>
+
+//where does the git store the remote
+--its in .git/config
+//can view it by
+cat .git/config
+
+//how to remove a remote branch with alias name origin
+git remote rm origin 
+
+//how to see remote branch
+git branch -r
+
+//how to see all the branches
+git branch -a
+
+//how to clone a repository to work on a project with a collaborator's URL
+git clone <url> <alias project name> (tracking is started by itself)
+
+//push changes made
+git push ("if we are tracking the remote")
+
+git push origin master(if we are not tracking the remote)
+
+
+
+
+					   
+							   
